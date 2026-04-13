@@ -2,12 +2,25 @@
 
 ## Project Overview
 
-This is a **self-contained progressive web app (PWA)** for a 17-day South America trip itinerary (April 24 – May 10, 2026). It is designed to work fully offline on mobile and desktop.
+This is a **minimalistic static HTML webpage** serving as a 17-day South America trip itinerary (April 24 – May 10, 2026). The guiding principle is **simplicity**: one HTML file, zero dependencies, instant load, works offline, looks great on mobile.
 
 - **Route:** Christchurch → Santiago → Valparaíso → Lima → Cusco → Machu Picchu → Galápagos → Auckland → Christchurch
 - **Countries:** Chile, Peru, Ecuador (+ New Zealand as departure/return point)
 - **Travelers:** 5 people
 - **Flights:** 10
+
+## Design Philosophy
+
+**Minimalism and usability come first.** Every UI decision should serve the traveler using this on a phone with spotty signal in a foreign country.
+
+- **Static over dynamic** — no server, no API, no database. A single `.html` file anyone can open.
+- **Offline-first** — the page must be fully usable with no internet connection. Fonts, icons, and all assets are embedded.
+- **Mobile-first UX** — designed for one-handed use on a phone. Touch targets are large, scrolling is natural, the layout fits a 375px screen comfortably.
+- **Fast and snappy** — no framework overhead. Interactions feel instant. Animations are subtle and purposeful (not decorative).
+- **Information density without clutter** — show what matters (where am I, what's next, how do I get there) without visual noise. Collapsed day cards reduce scroll fatigue.
+- **One-tap actions** — booking references, addresses, and passport numbers are all copy-able with a single tap. Deep links open maps/airlines directly.
+
+When proposing UI changes, ask: *does this make the app easier to use while traveling, or does it add complexity?* Prefer the former.
 
 ## Repository Structure
 
@@ -134,13 +147,26 @@ Edit CSS variables in the `<style>` block inside `<head>`. The `--accent` variab
 
 ## Conventions
 
-- **No external dependencies** — keep everything embedded. Do not add npm, CDN links, or external fonts.
-- **No build pipeline** — changes to `index.html` are immediately deployable.
-- **No tests** — this is a personal travel app; verify changes manually in a browser.
+### Architecture
 - **Single-file principle** — all HTML, CSS, and JS stay in `index.html`. Only the Service Worker lives separately in `sw.js`.
-- **Vanilla JS only** — do not introduce frameworks (React, Vue, etc.) or bundlers.
-- **Mobile-first** — keep the 660px max-width layout and touch-friendly interactions.
-- **Offline-first** — any new assets must also be added to the Service Worker cache list in `sw.js`.
+- **No external dependencies** — keep everything embedded. Do not add npm, CDN links, or external fonts. If a new font or icon is needed, base64-encode it.
+- **No build pipeline** — changes to `index.html` are immediately deployable by opening it in a browser.
+- **Vanilla JS only** — do not introduce frameworks (React, Vue, etc.), bundlers, or transpilers.
+- **No tests** — this is a personal travel app; verify changes manually in a browser.
+
+### UX & UI
+- **Mobile-first** — design for 375px width first. The 660px max-width container is a ceiling, not a target.
+- **Touch-friendly** — tap targets should be at least 44px tall. Avoid hover-only interactions.
+- **Offline-first** — any new assets (images, fonts, icons) must be embedded or added to the Service Worker cache list in `sw.js`. The app must work with no network.
+- **No decorative complexity** — do not add animations, transitions, or visual effects unless they meaningfully aid usability (e.g., the slide-up modal, day card collapse). Subtle is better.
+- **Readable typography** — maintain the existing type scale and font stack. Do not shrink font sizes for density.
+- **One-tap utility** — booking codes, addresses, and other actionable data must remain copy-able with a single tap and a toast confirmation.
+
+### Code style
+- Keep markup semantic and minimal. Avoid deeply nested elements.
+- Prefer `innerHTML` template literals for rendering — it's consistent with the existing pattern.
+- CSS goes in the `<style>` block in `<head>`. Use existing CSS variables; do not introduce new color literals.
+- JS goes in the inline `<script>` block at the bottom of `<body>`. Keep functions short and focused.
 
 ## Git Branches
 
