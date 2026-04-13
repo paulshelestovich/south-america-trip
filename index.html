@@ -853,5 +853,15 @@ buildDays();
 const tp=document.querySelector('.day-pill.is-today');
 if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'nearest',inline:'center'}),100);}
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/south-america-trip/sw.js', { scope: '/south-america-trip/' })
+      .then(r => console.log('SW registered'))
+      .catch(e => console.warn('SW failed:', e));
+  });
+}
+</script>
 </body>
 </html>
