@@ -389,7 +389,7 @@
     backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
     border-bottom:1px solid var(--border);
   }
-  .search-row { padding:10px 16px 6px; max-width:660px; margin:0 auto; position:relative; }
+  .search-row { display: flex; align-items: center; gap: 8px; padding: 10px 16px; padding:10px 16px 6px; max-width:660px; margin:0 auto; position:relative; }
   .search-row svg { position:absolute; left:30px; top:50%; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; margin-top:-2px; }
   #searchInput {
     width:100%; padding:10px 14px 10px 40px;
@@ -566,17 +566,15 @@
     .t-main { font-size:12px; }
   }
 
-  /* Passport FAB */
-  .passport-fab {
-    position: fixed; bottom: 24px; left: 20px; z-index: 200;
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--accent); color: #fff; font-size: 20px;
-    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(191,68,23,0.35);
-    transition: transform 0.2s, box-shadow 0.2s;
+  .passport-btn {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent-bg); border: 1px solid rgba(191,68,23,0.2);
+    color: var(--accent); font-size: 17px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
-  .passport-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(191,68,23,0.45); }
+  .passport-btn:hover { background: rgba(191,68,23,0.18); border-color: rgba(191,68,23,0.4); }
 
   /* Slide-up modal */
   .travelers-overlay {
@@ -625,7 +623,7 @@
 <div class="hero">
   <h1 id="hero-title" onclick="toggleHeroDetails()">South America<em class="chevron">▾</em></h1>
   <div id="hero-details">
-    <div class="hero-route">Christchurch → Santiago → Lima → Cusco → Galápagos → Home</div>
+    <div class="hero-route">Christchurch → Santiago → Valparaíso → Lima → Cusco → Machu Picchu → Galápagos → Auckland → Christchurch</div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">17</div><div class="stat-label">Days</div></div>
       <div class="stat"><div class="stat-num">10</div><div class="stat-label">Flights</div></div>
@@ -639,6 +637,7 @@
   <div class="search-row">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="searchInput" type="text" placeholder="Search flights, hotels, codes…" autocomplete="off">
+    <button class="passport-btn" onclick="openTravelers()" title="Travelers & Passport details">🛂</button>
   </div>
   <div class="day-strip" id="dayStrip"></div>
 </div>
@@ -984,7 +983,6 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-<button class="passport-fab" onclick="openTravelers()" title="Travelers & Passport">🛂</button>
 
 <div class="travelers-overlay" id="travelersOverlay" onclick="closeTravelersOutside(event)">
   <div class="travelers-sheet" id="travelersSheet">
