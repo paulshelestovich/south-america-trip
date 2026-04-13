@@ -782,7 +782,7 @@ const GL=[
 ];
 
 const PP=[
-{f:"Pavel",la:"Sheliastovich",p:"LB098173",x:"sagittarius.pod@gmail.com"},
+{f:"Pavel",la:"Sheliastovich",p:"LB098173",x:"sagittarius.pod@gmail.com",dob:"06.12.1988"},
 {f:"Yevhenii",la:"Kolisnyk",p:"EP917318",x:"DOB: 03.02.1993"},
 {f:"Tetiana",la:"Baiba",p:"GJ667814",x:"DOB: 06.05.1995"},
 {f:"Valentin",la:"Popov",p:"709625",x:"DOB: 18.12.1987"},
@@ -999,6 +999,7 @@ function buildTravelers() {
           </button>
         </div>
         <div style="font-size:14px;color:var(--text-muted);margin-top:3px">${t.x}</div>
+        ${t.dob?`<div style="font-size:14px;color:var(--text-muted);margin-top:2px">DOB: ${t.dob}</div>`:''}
       </div>
     </div>`;
   });
