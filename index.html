@@ -608,10 +608,9 @@
     color: var(--text-dim); font-size: 18px;
   }
   .travelers-body { padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 10px; }
-  .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; gap:12px; }
-  .pp-av { width:40px; height:40px; border-radius:10px; background:var(--accent-bg); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:var(--accent); flex-shrink:0; }
-  .pp-name { font-size:14px; font-weight:600; color:var(--text); }
-  .pp-num { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); margin-top:2px; display:flex; gap:4px; align-items:center; }
+  .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; }
+  .pp-name { font-size:17px; font-weight:600; color:var(--text); display:flex; gap:6px; align-items:center; }
+  .pp-num { font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--text-dim); margin-top:4px; display:flex; gap:4px; align-items:center; }
   .cp-btn { cursor:pointer; padding:2px; color:var(--text-muted); transition:color 0.15s; background:none; border:none; display:inline-flex; }
   .cp-btn:hover { color:var(--text); }
   .cp-btn.copied { color:#2a7a40; }
@@ -941,15 +940,18 @@ function buildTravelers() {
   let h = '';
   PP.forEach(t => {
     h += `<div class="pp-card">
-      <div class="pp-av">${t.f[0]}${t.la[0]}</div>
       <div class="pp-info">
-        <div class="pp-name">${t.f} ${t.la}</div>
-        <div class="pp-num">${t.p}
-          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <div class="pp-name">${t.f} ${t.la}
+          <button class="cp-btn" onclick="cp('${t.f} ${t.la}',this)" title="Copy name">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
         </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${t.x}</div>
+        <div class="pp-num">${t.p}
+          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div style="font-size:14px;color:var(--text-muted);margin-top:3px">${t.x}</div>
       </div>
     </div>`;
   });
