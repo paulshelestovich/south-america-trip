@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>South America 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --bg-card: #181b24;
+    --bg-card-hover: #1e2230;
+    --bg-surface: #232738;
+    --text: #e8e6e1;
+    --text-dim: #8a8d9b;
+    --text-muted: #555869;
+    --accent: #e07c4a;
+    --accent-bg: rgba(224,124,74,0.10);
+    --flight: #e07c4a;
+    --flight-bg: rgba(224,124,74,0.10);
+    --stay: #5c8ee0;
+    --stay-bg: rgba(92,142,224,0.10);
+    --train: #d4a843;
+    --train-bg: rgba(212,168,67,0.10);
+    --bus: #6bc76b;
+    --bus-bg: rgba(107,199,107,0.10);
+    --activity: #c084d4;
+    --activity-bg: rgba(192,132,212,0.10);
+    --note: #e06070;
+    --note-bg: rgba(224,96,112,0.10);
+    --border: rgba(255,255,255,0.06);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    position: relative; padding: 52px 20px 36px;
+    text-align: center; overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(224,124,74,0.15), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(92,142,224,0.08), transparent),
+      var(--bg);
+  }
+  .hero::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, rgba(224,124,74,0.4), transparent);
+  }
+  .hero-label {
+    display:inline-block; font-size:11px; font-weight:600;
+    letter-spacing:2.5px; text-transform:uppercase; color:var(--accent);
+    margin-bottom:14px; padding:5px 14px;
+    border:1px solid rgba(224,124,74,0.25); border-radius:100px;
+  }
+  .hero h1 {
+    font-family:'DM Serif Display',Georgia,serif;
+    font-size:clamp(32px,7vw,50px); font-weight:400;
+    letter-spacing:-0.5px; line-height:1.1;
+    background:linear-gradient(135deg,#fff 30%,var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .hero-route { font-size:13px; color:var(--text-dim); margin-top:10px; }
+  .hero-stats { display:flex; justify-content:center; gap:28px; margin-top:20px; flex-wrap:wrap; }
+  .stat-num { font-family:'DM Serif Display',serif; font-size:24px; color:#fff; line-height:1; }
+  .stat-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.2px; margin-top:3px; }
+
+  /* Sticky bar */
+  .sticky-bar {
+    position:sticky; top:0; z-index:100;
+    background:rgba(15,17,23,0.88);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .search-row { padding:10px 16px 6px; max-width:660px; margin:0 auto; position:relative; }
+  .search-row svg { position:absolute; left:30px; top:50%; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; margin-top:-2px; }
+  #searchInput {
+    width:100%; padding:10px 14px 10px 40px;
+    font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text);
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:100px; outline:none; transition:border-color 0.2s;
+  }
+  #searchInput:focus { border-color:rgba(224,124,74,0.4); }
+  #searchInput::placeholder { color:var(--text-muted); }
+
+  /* Day strip */
+  .day-strip {
+    display:flex; gap:2px; padding:8px 16px 10px;
+    overflow-x:auto; scrollbar-width:none;
+    -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity;
+  }
+  .day-strip::-webkit-scrollbar { display:none; }
+  .day-pill {
+    display:flex; flex-direction:column; align-items:center;
+    min-width:46px; padding:6px 4px 7px; border-radius:12px;
+    border:none; background:transparent; cursor:pointer;
+    transition:all 0.15s; scroll-snap-align:center;
+    -webkit-tap-highlight-color:transparent; position:relative;
+    font-family:'DM Sans',sans-serif;
+  }
+  .day-pill:hover { background:var(--bg-surface); }
+  .day-pill .dow { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); line-height:1; }
+  .day-pill .num { font-family:'DM Serif Display',serif; font-size:18px; color:var(--text-dim); line-height:1; margin-top:3px; }
+  .day-pill .mtag { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-top:3px; line-height:1; }
+  .day-pill .dots { display:flex; gap:3px; margin-top:4px; height:4px; }
+  .day-pill .dot { width:4px; height:4px; border-radius:50%; }
+  .dot.flight { background:var(--flight); }
+  .dot.train { background:var(--train); }
+  .dot.stay { background:var(--stay); }
+  .dot.activity { background:var(--activity); }
+  .day-pill.active { background:var(--accent); }
+  .day-pill.active .dow, .day-pill.active .num, .day-pill.active .mtag { color:#fff; }
+  .day-pill.active .dot { background:rgba(255,255,255,0.7); }
+  .day-pill.is-today::after { content:''; position:absolute; bottom:2px; width:14px; height:2px; border-radius:1px; background:var(--accent); }
+  .day-pill.active.is-today::after { background:rgba(255,255,255,0.8); }
+  .strip-div { display:flex; align-items:center; justify-content:center; min-width:28px; font-size:16px; flex-shrink:0; opacity:0.5; }
+
+  /* Container */
+  .container { max-width:660px; margin:0 auto; padding:8px 16px 100px; }
+
+  /* Day card */
+  .day-card { margin-bottom:12px; border-radius:var(--radius); background:var(--bg-card); border:1px solid var(--border); overflow:hidden; transition:border-color 0.2s; }
+  .day-card:hover { border-color:rgba(255,255,255,0.1); }
+  .day-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; cursor:pointer; user-select:none;
+    -webkit-user-select:none; -webkit-tap-highlight-color:transparent;
+  }
+  .day-header:active { background:var(--bg-card-hover); }
+  .day-header-left { display:flex; align-items:center; gap:12px; min-width:0; }
+  .day-num-box {
+    width:44px; height:44px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; border-radius:10px;
+    background:var(--bg-surface); flex-shrink:0; line-height:1;
+  }
+  .day-num-box .dow { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); }
+  .day-num-box .num { font-family:'DM Serif Display',serif; font-size:18px; color:#fff; margin-top:1px; }
+  .day-info { min-width:0; }
+  .day-title { font-size:15px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .day-sub { font-size:12px; color:var(--text-muted); margin-top:2px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .mbadge { display:inline-flex; align-items:center; font-size:10px; font-weight:600; padding:1px 6px; border-radius:4px; letter-spacing:0.3px; }
+  .mbadge.flight { background:var(--flight-bg); color:var(--flight); }
+  .mbadge.train { background:var(--train-bg); color:var(--train); }
+  .today-tag { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); background:var(--accent-bg); padding:2px 8px; border-radius:4px; }
+  .chevron { transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); color:var(--text-muted); flex-shrink:0; }
+  .day-card.open .chevron { transform:rotate(180deg); }
+  .day-body { max-height:0; overflow:hidden; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .day-card.open .day-body { max-height:3000px; }
+  .day-content { padding:0 16px 16px; }
+  .day-card.today-card { border-color:rgba(224,124,74,0.3); box-shadow:0 0 20px rgba(224,124,74,0.07); }
+
+  /* Items — timeline layout with prominent time */
+  .item { display:flex; gap:0; padding:10px 0; border-top:1px solid var(--border); align-items:stretch; }
+  .item:first-child { border-top:none; }
+  .item-tcol {
+    width:72px; flex-shrink:0; display:flex; flex-direction:column;
+    align-items:flex-end; padding-right:14px; padding-top:1px; position:relative;
+  }
+  .item-tcol::after { content:''; position:absolute; right:0; top:0; bottom:0; width:1px; background:var(--border); }
+  .t-main {
+    font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600;
+    color:#fff; line-height:1.2; text-align:right; white-space:nowrap;
+  }
+  .t-arr {
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:400;
+    color:var(--text-dim); text-align:right; margin-top:2px; white-space:nowrap;
+  }
+  .t-arr .plus { font-size:9px; opacity:0.5; }
+  .t-dot {
+    width:6px; height:6px; border-radius:50%; background:var(--bg-surface);
+    border:2px solid var(--text-muted); margin-top:7px; flex-shrink:0;
+  }
+  .item-right { display:flex; gap:10px; padding-left:14px; flex:1; min-width:0; align-items:flex-start; }
+  .item-icon { width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:9px; font-size:15px; flex-shrink:0; }
+  .item-icon.flight { background:var(--flight-bg); }
+  .item-icon.stay { background:var(--stay-bg); }
+  .item-icon.train { background:var(--train-bg); }
+  .item-icon.bus { background:var(--bus-bg); }
+  .item-icon.activity { background:var(--activity-bg); }
+  .item-icon.note { background:var(--note-bg); }
+  .item-body { flex:1; min-width:0; }
+  .item-label { font-size:14px; font-weight:600; color:#fff; line-height:1.3; }
+  .item-detail { font-size:12.5px; color:var(--text-dim); margin-top:3px; line-height:1.4; word-break:break-word; }
+  .item-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .action-btn {
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600;
+    padding:5px 10px; border-radius:6px; border:1px solid var(--border);
+    background:var(--bg-surface); color:var(--text-dim); cursor:pointer;
+    text-decoration:none; transition:all 0.15s; white-space:nowrap;
+  }
+  .action-btn:hover { background:var(--bg-card-hover); color:var(--text); }
+  .action-btn.copied { border-color:rgba(107,199,107,0.4); color:#6bc76b; }
+
+  /* Sections */
+  .section-title {
+    font-family:'DM Serif Display',serif; font-size:22px; color:#fff; padding:28px 0 12px;
+  }
+  .section-title::after { content:''; display:block; width:40px; height:2px; background:var(--accent); margin-top:8px; border-radius:2px; }
+  .links-grid { display:flex; flex-direction:column; gap:8px; }
+  .link-card {
+    display:flex; align-items:center; gap:12px; padding:13px 14px;
+    border-radius:var(--radius-sm); background:var(--bg-card);
+    border:1px solid var(--border); text-decoration:none;
+    color:var(--text); transition:all 0.15s;
+  }
+  .link-card:hover { background:var(--bg-card-hover); }
+  .link-card .ico { width:32px; height:32px; border-radius:8px; background:var(--bus-bg); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .link-card .lbl { font-size:13px; font-weight:500; flex:1; min-width:0; line-height:1.3; }
+  .link-card .arw { color:var(--text-muted); flex-shrink:0; }
+  .pp-grid { display:flex; flex-direction:column; gap:8px; }
+  .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .pp-av { width:36px; height:36px; border-radius:9px; background:var(--bg-surface); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:var(--accent); flex-shrink:0; }
+  .pp-info { flex:1; min-width:0; }
+  .pp-name { font-size:14px; font-weight:600; color:#fff; }
+  .pp-num { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); margin-top:2px; display:flex; gap:4px; align-items:center; }
+  .cp-btn { cursor:pointer; padding:2px; color:var(--text-muted); transition:color 0.15s; background:none; border:none; display:inline-flex; }
+  .cp-btn:hover { color:var(--text); }
+  .cp-btn.copied { color:#6bc76b; }
+
+  .scroll-top {
+    position:fixed; bottom:24px; right:24px; width:44px; height:44px;
+    border-radius:50%; background:var(--bg-card); border:1px solid var(--border);
+    color:var(--text-dim); cursor:pointer; display:none;
+    align-items:center; justify-content:center; z-index:100;
+    transition:all 0.2s; box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  }
+  .scroll-top:hover { color:#fff; background:var(--bg-surface); }
+  .scroll-top.show { display:flex; }
+
+  .toast {
+    position:fixed; bottom:80px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--bg-surface); border:1px solid var(--border);
+    color:#fff; font-size:13px; font-weight:500;
+    padding:10px 20px; border-radius:100px;
+    opacity:0; transition:all 0.3s; z-index:200;
+    pointer-events:none; white-space:nowrap;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .hidden { display:none !important; }
+
+  @media (max-width:480px) {
+    .hero { padding:40px 16px 28px; }
+    .day-header { padding:12px 12px; }
+    .day-content { padding:0 12px 14px; }
+    .item-tcol { width:62px; padding-right:10px; }
+    .item-right { padding-left:10px; }
+    .t-main { font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">April — May 2026</div>
+  <h1>South America</h1>
+  <div class="hero-route">Christchurch → Santiago → Lima → Cusco → Galápagos → Home</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">17</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">Flights</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Countries</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Travelers</div></div>
+  </div>
+</div>
+
+<div class="sticky-bar">
+  <div class="search-row">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="searchInput" type="text" placeholder="Search flights, hotels, codes…" autocomplete="off">
+  </div>
+  <div class="day-strip" id="dayStrip"></div>
+</div>
+
+<div class="container" id="daysContainer"></div>
+<div class="toast" id="toast"></div>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0})">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script>
+const D=[
+{d:"2026-04-24",r:"cl",t:"Christchurch → Santiago",i:[
+{y:"flight",ic:"✈️",l:"Christchurch → Auckland",dt:"Jetstar JQ232",tm:"9:40",te:"11:00",rf:"WRBUPQ",lk:[{l:"Manage Booking",u:"https://booking.jetstar.com/mmb/#/manage-my-trip?culture=en-nz"}]},
+{y:"flight",ic:"✈️",l:"Auckland → Santiago",dt:"LATAM LA800",tm:"19:10",te:"14:05+1",rf:"WCMJSJ",lk:[{l:"Manage Booking",u:"https://www.latamairlines.com/nz/en/my-trips/second-detail?orderId=LA5440406JXBT&lastname=sheliastovich"}]},
+{y:"activity",ic:"📝",l:"micheline"},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Santiago",dt:"General Mackenna 1555 801, Santiago, Región Metropolitana 8340073, Chile",lk:[{l:"Map",u:"https://maps.app.goo.gl/vMkZxJuPsf67SHev5"}]}
+]},
+{d:"2026-04-25",r:"cl",t:"Santiago — Valparaíso Day Trip",i:[
+{y:"activity",ic:"🎯",l:"Valparaíso",dt:"Day trip from Santiago"},
+{y:"activity",ic:"⚽",l:"Soccer"},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Santiago",dt:"General Mackenna 1555 801, Santiago",lk:[{l:"Map",u:"https://maps.app.goo.gl/vMkZxJuPsf67SHev5"}]}
+]},
+{d:"2026-04-26",r:"pe",t:"Santiago → Lima",i:[
+{y:"flight",ic:"✈️",l:"Santiago → Lima",dt:"SKY Airline H2 806",tm:"05:00",te:"07:55",rf:"SEQGUG / DTIWXZ",lk:[{l:"Booking 1",u:"https://documents.sabre.com/new/reservationsPrint.html?epk=a10b5177c14b5a943840d1eb39a6c445c846bd7122df513b3d567dfd2443f253aa323ff9b2a7ca95abc32430c56aca80b0b2012daef715df515924d128792f6a4a42677bcff90384668a6734ea93ed1c731418cb302f035557dae0487ab445809293f5cc07c4b4c37f068119e5d01b54191d77eeb4ac0d579dbb9c02bda850b7f1bac1f34ed39e710eb2babe21df2c4ab15b5b98d27631a73251c63cd6af8ecff457c80bfc12eca8b3040c91d6eff434b79265941475b815ebe7abd8cf770481e9e4f129abfb360945e845e854534400fa9c3941a12cd62b8b3ec3a6b9f183a52dcd"},{l:"Booking 2",u:"https://documents.sabre.com/new/reservationsPrint.html?epk=e912dfb7a71c92f282fa87449669c63c639a49c3780827ceb60743543224dc0b4b0c3cea573880bae5d65bb9e326bc4d640e572381138f96aff1ad1888372b31bb26f3817ff8e1116eefe61660abdc5dc1b4e335c1f6d507d9526eac6b8171a0332a0bf5102a5fcadec7376dc0a4981569734bd0e6931b32789112299c84c4a457bec3c33b61d6f148e0795ba37973696556c1ccdae4ac9f88f75f6f99bd66dd2105b41afb478c2d676075767104bd3375e72bdb293a8cbd479f40a1698d542636a4a88f49a94e352bcd71ccab20046213e5a5df97cb730cae411151ebe7faa7222a80447ce6ce"}]},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Lima",dt:"Avenida Uruguay 401 7, Lima, Provincia de Lima 15001, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/B8Gjf9vrhe4PKxcx7"}]}
+]},
+{d:"2026-04-27",r:"pe",t:"Lima → Cusco → Machu Picchu",i:[
+{y:"flight",ic:"✈️",l:"Lima → Cusco",dt:"SKY Airline H2 5025",tm:"12:05",te:"13:35",rf:"JZUMBU / NNJUNM",lk:[{l:"Check-in",u:"https://documents.sabre.com/new/clickRedirect.html?epk=231465b6a0529a7e1402509722cc0efe01a0e9c3f5dbe8a213d4e7f772d2288003bc25560ca92a2d2a7bb675214ae54fedbd11f5ed4cf1d301bf00cad38652f576a7fc4d1646119e8fce610b95f8fa43a903bfd13472cd82ef13360929b6caf9e740a2646d0c7d2215ba11bd761f36cdfee460f06dd88ed188bceaaacc342890b5ba3df3831f818ab917f77fb648e3428af050563c711608267f02a2d951386e71da49e8bc3aeffa59e4e5a3205358d51c1fb3f931cfe23d164dc814e0f185a79402ff8bc132188d6c196ca86987cdfa4794de89975e515772a18bdfb42ec548ebad6765dd4f67cb280ba937281a2c68004435ca68694024e5b9b13b28dae5c0dfea576af50f9bc0390de8dca234489bdffd8628eecf2f519524da89b5176bfa9b36786e6f29c22166d903b824cb52cb6f51168f2d283e263becc30c40f226ab2ea48470983787ef3676367f16387f006d3def61e137bcbf6a0883"},{l:"Booking",u:"https://documents.sabre.com/new/reservationsPrint.html?epk=25311744b30b02e6307ec34aa6917977ca843feaae8f2641143ab1434b1c875c694eea4f7feac5b784ece71ea509e2ab79d79c4c334a089a71b080f4ad3b808b78063fcd367c6a9ed36a80397e059f3efeb297c9f7187f2538d34ff6f8ee6c3ec530aaf03ef6df7d57fe5c5bbce38cf9e289800deb68bdca809fed3f0b2cfbbc2e209aa7f8d07aaf1a78451fdb174c358fba0b148f52783ac451cd76b1d9b021a08042bdcbe5fc5614769e7591e9f09e361e273a0eff2a23fd010e0ee4b459fda61a9257a2c3777494054158209397d00a0ca7b3bfd6ac6b58f75c551f04dcc5f0fdd1e14f"}]},
+{y:"note",ic:"⚠️",l:"NEED A VAN from airport",dt:"Book transport for group",lk:[{l:"Taxi Datum",u:"https://taxidatum.com/online-taxi-reservation-lima-and-cusco-airport/"}]},
+{y:"train",ic:"🚂",l:"Ollantaytambo → Machu Picchu",dt:"Peru Rail",tm:"21:00",te:"22:45",rf:"WEB2651809"},
+{y:"stay",ic:"🏠",l:"Hotel Horizonte",dt:"Avenida Hermanos Ayar 503-H, Machu Picchu, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/hWQBrtE9NDsP4AEH6"}]}
+]},
+{d:"2026-04-28",r:"pe",t:"Machu Picchu Day",i:[
+{y:"note",ic:"🎫",l:"Buy bus ticket a day in advance!",dt:"Consettur bus to Machu Picchu",lk:[{l:"Buy Tickets",u:"https://www.busconsettur.com/en/USD/machu-picchu-bus-tickets"}]},
+{y:"activity",ic:"🏔️",l:"Circuito 3 Ruta 3-A: Montaña Waynapicchu",tm:"10:00",lk:[{l:"Tickets",u:"https://tuboleto.cultura.pe/inicio"}]},
+{y:"activity",ic:"🏛️",l:"Circuito 2 Ruta 2-A: Clásico Diseñada",tm:"15:00"},
+{y:"activity",ic:"🥾",l:"Hike back to Aguas Calientes"},
+{y:"stay",ic:"🏠",l:"El Tambo Machupicchu",dt:"Calle Wakanki 300 Urb. Las Orquideas, Machu Picchu, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/VjSF11DoDqC9pqmh6"}]}
+]},
+{d:"2026-04-29",r:"pe",t:"Machu Picchu → Cusco",i:[
+{y:"train",ic:"🚂",l:"Machu Picchu → Ollantaytambo",dt:"Peru Rail",tm:"17:23",te:"19:02",rf:"WEB2743574"},
+{y:"note",ic:"⚠️",l:"NEED A VAN from Ollantaytambo",dt:"Book transport for group",lk:[{l:"Taxi Datum",u:"https://taxidatum.com/online-taxi-reservation-lima-and-cusco-airport/"},{l:"Cusco Taxi",u:"https://cusco-taxi.com/cusco-airport-to-ollantaytambo-transfer/"}]},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Cusco",dt:"Jiron Ollanta, Cusco, Cuzco 08003, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/rkKd1J9V1YCvMGVC8"}]}
+]},
+{d:"2026-04-30",r:"pe",t:"Cusco — Free Day",i:[
+{y:"activity",ic:"🎯",l:"Explore Cusco",dt:"Free day to explore the city"},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Cusco",dt:"Jiron Ollanta, Cusco, Cuzco 08003, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/rkKd1J9V1YCvMGVC8"}]}
+]},
+{d:"2026-05-01",r:"pe",t:"Cusco — Free Day",i:[
+{y:"activity",ic:"🎯",l:"Explore Cusco",dt:"Free day to explore the city"},
+{y:"stay",ic:"🏠",l:"Airbnb Home in Cusco",dt:"Jiron Ollanta, Cusco, Cuzco 08003, Peru",lk:[{l:"Map",u:"https://maps.app.goo.gl/rkKd1J9V1YCvMGVC8"}]}
+]},
+{d:"2026-05-02",r:"ga",t:"Cusco → Galápagos",i:[
+{y:"flight",ic:"✈️",l:"Cusco → Lima → Guayaquil → San Cristóbal",dt:"LATAM LA2034 / LA1449 / LA1419",tm:"19:40",te:"10:04+1",rf:"NLPKHH",lk:[{l:"Manage Booking",u:"https://www.latamairlines.com/nz/en/my-trips/second-detail?orderId=LA5445428QZCS&lastname=SHELIASTOVICH"}]},
+{y:"stay",ic:"🏠",l:"Casa Serena (Guayaquil overnight)",dt:"SEXTO CALLEJON 14 NE, Guayaquil Ecuador",lk:[{l:"Map",u:"https://maps.app.goo.gl/8xPQLmc4mxTTS3f69"}]}
+]},
+{d:"2026-05-03",r:"ga",t:"San Cristóbal Island",i:[
+{y:"activity",ic:"🐢",l:"Explore San Cristóbal",dt:"Galápagos Islands"},
+{y:"stay",ic:"🏠",l:"Airbnb — Puerto Baquerizo Moreno",dt:"Carlos Mora y Juan José Flores diagonal al Ecu 911, Puerto Baquerizo Moreno, Galápagos"}
+]},
+{d:"2026-05-04",r:"ga",t:"San Cristóbal Island",i:[
+{y:"activity",ic:"🤿",l:"Explore San Cristóbal",dt:"Snorkeling, tours, wildlife"},
+{y:"stay",ic:"🏠",l:"Airbnb — Puerto Baquerizo Moreno",dt:"Carlos Mora y Juan José Flores diagonal al Ecu 911, Puerto Baquerizo Moreno, Galápagos"}
+]},
+{d:"2026-05-05",r:"ga",t:"Santa Cruz Island",i:[
+{y:"activity",ic:"🐢",l:"Travel to Puerto Ayora",dt:"Ferry / speedboat to Santa Cruz"},
+{y:"stay",ic:"🏠",l:"Airbnb — Puerto Ayora",dt:"Calle Juan León Mera y Scalesia, Puerto Ayora, Islas Galápagos 200350, Ecuador",lk:[{l:"Map",u:"https://maps.app.goo.gl/fx6cJWqBCY9k3aPSA"}]}
+]},
+{d:"2026-05-06",r:"ga",t:"Santa Cruz Island",i:[
+{y:"activity",ic:"🦎",l:"Explore Santa Cruz",dt:"Charles Darwin Station, Tortuga Bay, Los Gemelos"},
+{y:"stay",ic:"🏠",l:"Airbnb — Puerto Ayora",dt:"Calle Juan León Mera y Scalesia, Puerto Ayora",lk:[{l:"Map",u:"https://maps.app.goo.gl/fx6cJWqBCY9k3aPSA"}]}
+]},
+{d:"2026-05-07",r:"ga",t:"Santa Cruz Island",i:[
+{y:"activity",ic:"🌊",l:"Explore Santa Cruz",dt:"Last full day in Galápagos"},
+{y:"stay",ic:"🏠",l:"Airbnb — Puerto Ayora",dt:"Calle Juan León Mera y Scalesia, Puerto Ayora",lk:[{l:"Map",u:"https://maps.app.goo.gl/fx6cJWqBCY9k3aPSA"}]}
+]},
+{d:"2026-05-08",r:"hm",t:"Galápagos → Santiago",i:[
+{y:"flight",ic:"✈️",l:"Baltra → Guayaquil → Santiago",dt:"LATAM LA1412 / LA1447",tm:"11:12",te:"22:29",rf:"GMMNHU",lk:[{l:"Manage Booking",u:"https://www.latamairlines.com/nz/en/my-trips/second-detail?orderId=LA5441704RLZE&lastname=SHELIASTOVICH"}]},
+{y:"stay",ic:"🏠",l:"Airbnb Apartment in Santiago",dt:"General Mackenna 1555, Santiago, Región Metropolitana 8340073",lk:[{l:"Map",u:"https://maps.app.goo.gl/AYdWsf1xeK6XBiae7"}]}
+]},
+{d:"2026-05-09",r:"hm",t:"Santiago → Auckland",i:[
+{y:"flight",ic:"✈️",l:"Santiago → Auckland",dt:"LATAM LA801",tm:"12:15",te:"16:55+1",rf:"WCMJSJ",lk:[{l:"Manage Booking",u:"https://www.latamairlines.com/nz/en/my-trips/second-detail?orderId=LA5440406JXBT&lastname=sheliastovich"}]}
+]},
+{d:"2026-05-10",r:"hm",t:"Auckland → Christchurch",i:[
+{y:"flight",ic:"✈️",l:"Auckland → Christchurch",dt:"Jetstar JQ241",tm:"20:50",te:"22:15",rf:"WRBUPQ",lk:[{l:"Manage Booking",u:"https://booking.jetstar.com/mmb/#/manage-my-trip?culture=en-nz"}]}
+]}
+];
+
+const GL=[
+{l:"San Cristóbal Full Day Tour 360°",u:"https://www.getyourguide.com/puerto-baquerizo-moreno-l180769/galapagos-san-cristobal-full-day-tour-360-t581740/?ranking_uuid=a05cbc11-0837-48a7-b0a4-3ae0cddda1ab"},
+{l:"Kicker Rock Full Day Snorkeling",u:"https://www.getyourguide.com/en-gb/puerto-baquerizo-moreno-l180769/kicker-rock-full-day-t563418/?ranking_uuid=cd66c672-9dfa-451b-8d81-688a5240fe09"},
+{l:"Aqua Ventures — Tour 360",u:"https://aquaventuresgps.com/producto/tour-360/"},
+{l:"Islanders Galápagos Tours",u:"https://www.facebook.com/IslandersGalapagosTours"},
+{l:"Galápagos Xcursion — Tour 360",u:"https://galapagosxcursion.com/product/360/"}
+];
+
+const PP=[
+{f:"Pavel",la:"Sheliastovich",p:"LB098173",x:"sagittarius.pod@gmail.com"},
+{f:"Yevhenii",la:"Kolisnyk",p:"EP917318",x:"DOB: 03.02.1993"},
+{f:"Tetiana",la:"Baiba",p:"GJ667814",x:"DOB: 06.05.1995"},
+{f:"Valentin",la:"Popov",p:"709625",x:"DOB: 18.12.1987"},
+{f:"Darya",la:"Mikhalionak",p:"LB013044",x:"DOB: 31.03.1990"}
+];
+
+const DW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const td=new Date();td.setHours(0,0,0,0);
+const ts=td.toISOString().slice(0,10);
+const RF={cl:'🇨🇱',pe:'🇵🇪',ga:'🇪🇨',hm:'🏠'};
+
+function buildStrip(){
+  const s=document.getElementById('dayStrip');
+  let h='',lr='';
+  D.forEach((day,idx)=>{
+    const dt=new Date(day.d+'T00:00:00');
+    const dow=DW[dt.getDay()].slice(0,3);
+    const n=dt.getDate();
+    const isT=day.d===ts;
+    const sm=idx===0||dt.getDate()===1;
+    if(day.r!==lr&&lr) h+=`<div class="strip-div">${RF[day.r]||'·'}</div>`;
+    lr=day.r;
+    const types=[...new Set(day.i.map(x=>x.y))];
+    const dots=types.filter(t=>['flight','train','activity','stay'].includes(t)).slice(0,3).map(t=>`<span class="dot ${t}"></span>`).join('');
+    h+=`<button class="day-pill${isT?' is-today':''}" data-date="${day.d}" onclick="jump('${day.d}')">
+      <span class="dow">${dow}</span><span class="num">${n}</span>
+      ${sm?`<span class="mtag">${MN[dt.getMonth()]}</span>`:''}
+      <div class="dots">${dots}</div>
+    </button>`;
+  });
+  s.innerHTML=h;
+}
+
+function buildDays(){
+  const c=document.getElementById('daysContainer');
+  let h='';
+  D.forEach(day=>{
+    const dt=new Date(day.d+'T00:00:00');
+    const dow=DW[dt.getDay()],n=dt.getDate(),mo=MN[dt.getMonth()];
+    const isT=day.d===ts;
+    const hf=day.i.some(x=>x.y==='flight'), ht=day.i.some(x=>x.y==='train');
+    const badges=[];
+    if(hf) badges.push('<span class="mbadge flight">✈️ Flight</span>');
+    if(ht) badges.push('<span class="mbadge train">🚂 Train</span>');
+    h+=`<div class="day-card${isT?' today-card open':''}" data-date="${day.d}" id="day-${day.d}">
+      <div class="day-header" onclick="tog(this)">
+        <div class="day-header-left">
+          <div class="day-num-box"><span class="dow">${dow}</span><span class="num">${n}</span></div>
+          <div class="day-info">
+            <div class="day-title">${day.t}</div>
+            <div class="day-sub">${mo} ${n} ${badges.join('')} ${isT?'<span class="today-tag">Today</span>':''}</div>
+          </div>
+        </div>
+        <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="day-body"><div class="day-content">${ri(day.i)}</div></div>
+    </div>`;
+  });
+
+  h+=`<div class="section-title">Galápagos Tours & Links</div><div class="links-grid">`;
+  GL.forEach(lk=>{
+    h+=`<a class="link-card" href="${lk.u}" target="_blank" rel="noopener">
+      <div class="ico">🐢</div><div class="lbl">${lk.l}</div>
+      <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+    </a>`;
+  });
+  h+='</div>';
+
+  h+=`<div class="section-title">Travelers</div><div class="pp-grid">`;
+  PP.forEach(t=>{
+    h+=`<div class="pp-card">
+      <div class="pp-av">${t.f[0]}${t.la[0]}</div>
+      <div class="pp-info">
+        <div class="pp-name">${t.f} ${t.la}</div>
+        <div class="pp-num">${t.p}
+          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:1px">${t.x}</div>
+      </div>
+    </div>`;
+  });
+  h+='</div>';
+  c.innerHTML=h;
+  if(!document.querySelector('.day-card.today-card')){const f=document.querySelector('.day-card');if(f)f.classList.add('open');}
+}
+
+function ri(items){
+  return items.map(it=>{
+    let tc;
+    if(it.tm){
+      tc=`<div class="t-main">${it.tm}</div>`;
+      if(it.te){
+        const e=it.te.replace(/\+1/,' <span class="plus">+1</span>');
+        tc+=`<div class="t-arr">▸ ${e}</div>`;
+      }
+    } else {
+      tc=`<div class="t-dot"></div>`;
+    }
+    let a='';
+    if(it.rf){
+      a+=`<button class="action-btn" onclick="cp('${it.rf}',this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        ${it.rf}</button>`;
+    }
+    if(it.lk) it.lk.forEach(lk=>{
+      a+=`<a class="action-btn" href="${lk.u}" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        ${lk.l}</a>`;
+    });
+    if(it.dt&&it.y==='stay'){
+      a+=`<button class="action-btn" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Address</button>`;
+    }
+    return `<div class="item" data-type="${it.y}">
+      <div class="item-tcol">${tc}</div>
+      <div class="item-right">
+        <div class="item-icon ${it.y}">${it.ic}</div>
+        <div class="item-body">
+          <div class="item-label">${it.l}</div>
+          ${it.dt?`<div class="item-detail">${it.dt}</div>`:''}
+          ${a?`<div class="item-actions">${a}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tog(h){h.closest('.day-card').classList.toggle('open');}
+
+function jump(ds){
+  document.querySelectorAll('.day-pill').forEach(p=>p.classList.remove('active'));
+  const pill=document.querySelector(`.day-pill[data-date="${ds}"]`);
+  if(pill){pill.classList.add('active');pill.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+  const card=document.getElementById('day-'+ds);
+  if(card){
+    card.classList.add('open');
+    setTimeout(()=>{
+      const bh=document.querySelector('.sticky-bar')?.offsetHeight||0;
+      const top=card.getBoundingClientRect().top+window.scrollY-bh-8;
+      window.scrollTo({top,behavior:'smooth'});
+    },50);
+  }
+}
+
+function cp(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.classList.add('copied');toast('Copied!');
+    setTimeout(()=>btn.classList.remove('copied'),1500);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;
+    ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    btn.classList.add('copied');toast('Copied!');
+    setTimeout(()=>btn.classList.remove('copied'),1500);
+  });
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),1500);
+}
+
+const si=document.getElementById('searchInput');
+let st;
+si.addEventListener('input',()=>{clearTimeout(st);st=setTimeout(doSearch,150);});
+
+function doSearch(){
+  const q=si.value.toLowerCase().trim();
+  document.querySelectorAll('.day-card').forEach(c=>{
+    const m=!q||c.textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden',!m);
+    if(q&&m)c.classList.add('open');
+  });
+  document.querySelectorAll('.section-title,.links-grid,.pp-grid').forEach(s=>{
+    s.style.display=q?(s.textContent.toLowerCase().includes(q)?'':'none'):'';
+  });
+}
+
+function updatePill(){
+  const bh=document.querySelector('.sticky-bar')?.offsetHeight||0;
+  let act=null;
+  document.querySelectorAll('.day-card:not(.hidden)').forEach(c=>{
+    if(c.getBoundingClientRect().top<bh+100)act=c.dataset.date;
+  });
+  if(act){
+    document.querySelectorAll('.day-pill').forEach(p=>p.classList.toggle('active',p.dataset.date===act));
+    const ap=document.querySelector('.day-pill.active');
+    if(ap)ap.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+}
+
+let sf=false;
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400);
+  if(!sf){requestAnimationFrame(()=>{updatePill();sf=false;});sf=true;}
+},{passive:true});
+
+buildStrip();
+buildDays();
+const tp=document.querySelector('.day-pill.is-today');
+if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'nearest',inline:'center'}),100);}
+</script>
+</body>
+</html>
