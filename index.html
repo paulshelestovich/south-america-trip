@@ -998,7 +998,7 @@ function buildTravelers() {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
         </div>
-        <div style="font-size:14px;color:var(--text-muted);margin-top:3px">${t.x}</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:4px">${t.x}${t.x.includes('@')?`<button class="cp-btn" onclick="cp('${t.x}',this)" title="Copy email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>
         ${t.dob?`<div style="font-size:14px;color:var(--text-muted);margin-top:2px">DOB: ${t.dob}</div>`:''}
       </div>
     </div>`;
