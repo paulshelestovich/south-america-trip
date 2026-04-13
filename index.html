@@ -615,9 +615,56 @@
   .cp-btn:hover { color:var(--text); }
   .cp-btn.copied { color:#2a7a40; }
 
+  /* Lock screen */
+  #lock { position:fixed; inset:0; z-index:9999; background:var(--bg-surface); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.25rem; padding:2rem; }
+  #lock-icon { font-size:2.5rem; line-height:1; }
+  #lock h2 { font-size:1.3rem; font-weight:600; color:var(--text); margin:0; }
+  #lock p { color:var(--text-muted); font-size:0.875rem; margin:0; text-align:center; }
+  #lockForm { display:flex; gap:0.5rem; width:100%; max-width:300px; }
+  #lockInput { flex:1; padding:0.75rem 1rem; border:1.5px solid var(--border); border-radius:var(--radius); background:var(--bg-card); color:var(--text); font-size:1rem; font-family:inherit; outline:none; -webkit-appearance:none; }
+  #lockInput:focus { border-color:var(--accent); }
+  #lockInput.shake { animation:lockShake 0.35s; border-color:#c0392b; }
+  #lockBtn { padding:0.75rem 1.1rem; background:var(--accent); color:#fff; border:none; border-radius:var(--radius); font-size:1.1rem; font-weight:700; cursor:pointer; }
+  #lockBtn:active { opacity:0.85; }
+  @keyframes lockShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
 </style>
 </head>
 <body>
+
+<div id="lock">
+  <div id="lock-icon">🔒</div>
+  <h2>South America 2026</h2>
+  <p>Enter the trip password to view the itinerary</p>
+  <form id="lockForm" onsubmit="return false;">
+    <input id="lockInput" type="password" placeholder="Password" autocomplete="current-password" autofocus>
+    <button id="lockBtn" type="submit" onclick="doUnlock()">→</button>
+  </form>
+</div>
+<script>
+(function(){
+  const HASH='1bad4ee2e7a8e61e87f687b6486bc2a94d9a602b74c9547730fbaabd01820647';
+  const KEY='sa_trip_auth';
+  if(sessionStorage.getItem(KEY)==='1'){document.getElementById('lock').remove();return;}
+  async function doUnlock(){
+    const inp=document.getElementById('lockInput');
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(inp.value));
+    const hex=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hex===HASH){
+      sessionStorage.setItem(KEY,'1');
+      document.getElementById('lock').remove();
+    } else {
+      inp.classList.remove('shake');
+      void inp.offsetWidth;
+      inp.classList.add('shake');
+      inp.value='';
+      setTimeout(()=>inp.classList.remove('shake'),400);
+    }
+  }
+  window.doUnlock=doUnlock;
+  document.getElementById('lockInput').addEventListener('keydown',e=>{if(e.key==='Enter')doUnlock();});
+})();
+</script>
 
 <div class="hero">
   <h1 id="hero-title" onclick="toggleHeroDetails()">South America<em class="chevron">▾</em></h1>
