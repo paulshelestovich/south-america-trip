@@ -345,7 +345,6 @@
     background:linear-gradient(135deg,#2a1a0a 0%,var(--accent) 100%);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
-  .hero-route { font-size:13px; color:var(--text-dim); margin-top:10px; }
   .hero h1 { cursor: pointer; user-select: none; -webkit-user-select: none; }
   .hero h1 .chevron { display:inline-block; font-style:normal; font-size:0.55em; vertical-align:middle; margin-left:8px; transition: transform 0.3s; opacity:0.6; }
   .hero h1.open .chevron { transform: rotate(180deg); }
@@ -356,12 +355,32 @@
     transition: max-height 0.35s ease, opacity 0.3s ease;
   }
   #hero-details.open {
-    max-height: 200px;
+    max-height: 300px;
     opacity: 1;
   }
+  #hero-details .hero-route,
+  #hero-details .hero-stats {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-top: 10px;
+    display: block;
+  }
+  #hero-details .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 24px; color: #2a1a0a !important; line-height: 1; }
+  .stat-label { font-size: 10px; color: #7a6050 !important; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 3px; font-weight: 600; }
+  .hero-route { font-size: 13px; color: #2a1a0a !important; font-weight: 500; }
   .hero-stats { display:flex; justify-content:center; gap:28px; margin-top:20px; flex-wrap:wrap; }
-  .stat-num { font-family:'DM Serif Display',serif; font-size:24px; color:var(--text); line-height:1; }
-  .stat-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.2px; margin-top:3px; }
+
 
   /* Sticky bar */
   .sticky-bar {
@@ -506,7 +525,6 @@
   .link-card .ico { width:32px; height:32px; border-radius:8px; background:var(--bus-bg); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
   .link-card .lbl { font-size:13px; font-weight:500; flex:1; min-width:0; line-height:1.3; }
   .link-card .arw { color:var(--text-muted); flex-shrink:0; }
-  .pp-grid { display:flex; flex-direction:column; gap:8px; }
   .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; gap:12px; }
   .pp-av { width:36px; height:36px; border-radius:9px; background:var(--bg-surface); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:var(--accent); flex-shrink:0; }
   .pp-info { flex:1; min-width:0; }
@@ -547,6 +565,59 @@
     .item-right { padding-left:10px; }
     .t-main { font-size:12px; }
   }
+
+  /* Passport FAB */
+  .passport-fab {
+    position: fixed; bottom: 24px; left: 20px; z-index: 200;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 20px;
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(191,68,23,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .passport-fab:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(191,68,23,0.45); }
+
+  /* Slide-up modal */
+  .travelers-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(42,26,10,0.45); backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .travelers-overlay.open { display: flex; align-items: flex-end; }
+  .travelers-sheet {
+    background: var(--bg-card); width: 100%; border-radius: 20px 20px 0 0;
+    padding: 0 0 32px; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.18);
+    animation: slideUp 0.32s cubic-bezier(0.34,1.1,0.64,1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .travelers-handle {
+    width: 40px; height: 4px; border-radius: 2px; background: var(--border);
+    margin: 12px auto 0; cursor: pointer;
+  }
+  .travelers-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .travelers-header h2 {
+    font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text);
+  }
+  .travelers-close {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--bg-surface);
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); font-size: 18px;
+  }
+  .travelers-body { padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 10px; }
+  .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .pp-av { width:40px; height:40px; border-radius:10px; background:var(--accent-bg); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:var(--accent); flex-shrink:0; }
+  .pp-name { font-size:14px; font-weight:600; color:var(--text); }
+  .pp-num { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); margin-top:2px; display:flex; gap:4px; align-items:center; }
+  .cp-btn { cursor:pointer; padding:2px; color:var(--text-muted); transition:color 0.15s; background:none; border:none; display:inline-flex; }
+  .cp-btn:hover { color:var(--text); }
+  .cp-btn.copied { color:#2a7a40; }
+
 </style>
 </head>
 <body>
@@ -736,22 +807,7 @@ function buildDays(){
   });
   h+='</div>';
 
-  h+=`<div class="section-title">Travelers</div><div class="pp-grid">`;
-  PP.forEach(t=>{
-    h+=`<div class="pp-card">
-      <div class="pp-av">${t.f[0]}${t.la[0]}</div>
-      <div class="pp-info">
-        <div class="pp-name">${t.f} ${t.la}</div>
-        <div class="pp-num">${t.p}
-          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
-        </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:1px">${t.x}</div>
-      </div>
-    </div>`;
-  });
-  h+='</div>';
+  // Travelers moved to slide-up sheet — see openTravelers()
   c.innerHTML=h;
   if(!document.querySelector('.day-card.today-card')){const f=document.querySelector('.day-card');if(f)f.classList.add('open');}
 }
@@ -879,6 +935,40 @@ function toggleHeroDetails() {
   d.classList.toggle('open', !isOpen);
   t.classList.toggle('open', !isOpen);
 }
+
+function buildTravelers() {
+  const body = document.getElementById('travelersBody');
+  if (body.innerHTML) return; // already built
+  let h = '';
+  PP.forEach(t => {
+    h += `<div class="pp-card">
+      <div class="pp-av">${t.f[0]}${t.la[0]}</div>
+      <div class="pp-info">
+        <div class="pp-name">${t.f} ${t.la}</div>
+        <div class="pp-num">${t.p}
+          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${t.x}</div>
+      </div>
+    </div>`;
+  });
+  body.innerHTML = h;
+}
+function openTravelers() {
+  buildTravelers();
+  document.getElementById('travelersOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeTravelers() {
+  document.getElementById('travelersOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeTravelersOutside(e) {
+  if (e.target === document.getElementById('travelersOverlay')) closeTravelers();
+}
+
 buildDays();
 const tp=document.querySelector('.day-pill.is-today');
 if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'nearest',inline:'center'}),100);}
@@ -893,5 +983,18 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<button class="passport-fab" onclick="openTravelers()" title="Travelers & Passport">🛂</button>
+
+<div class="travelers-overlay" id="travelersOverlay" onclick="closeTravelersOutside(event)">
+  <div class="travelers-sheet" id="travelersSheet">
+    <div class="travelers-handle" onclick="closeTravelers()"></div>
+    <div class="travelers-header">
+      <h2>✈️ Travelers</h2>
+      <button class="travelers-close" onclick="closeTravelers()">✕</button>
+    </div>
+    <div class="travelers-body" id="travelersBody"></div>
+  </div>
+</div>
 </body>
 </html>
