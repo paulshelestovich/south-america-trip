@@ -683,6 +683,7 @@
   <div class="search-row">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="searchInput" type="text" placeholder="Search flights, hotels, codes…" autocomplete="off">
+    <button class="passport-btn" onclick="openGalapagos()" title="Galápagos Tours & Links">🐢</button>
     <button class="passport-btn" onclick="openTravelers()" title="Travelers & Passport details">🛂</button>
   </div>
   <div class="day-strip" id="dayStrip"></div>
@@ -840,15 +841,7 @@ function buildDays(){
     </div>`;
   });
 
-  h+=`<div class="section-title">Galápagos Tours & Links</div><div class="links-grid">`;
-  GL.forEach(lk=>{
-    h+=`<a class="link-card" href="${lk.u}" target="_blank" rel="noopener">
-      <div class="ico">🐢</div><div class="lbl">${lk.l}</div>
-      <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-    </a>`;
-  });
-  h+='</div>';
-
+  // Galápagos links moved to slide-up sheet — see openGalapagos()
   // Travelers moved to slide-up sheet — see openTravelers()
   c.innerHTML=h;
   if(!document.querySelector('.day-card.today-card')){const f=document.querySelector('.day-card');if(f)f.classList.add('open');}
@@ -941,7 +934,7 @@ function doSearch(){
     c.classList.toggle('hidden',!m);
     if(q&&m)c.classList.add('open');
   });
-  document.querySelectorAll('.section-title,.links-grid,.pp-grid').forEach(s=>{
+  document.querySelectorAll('.section-title,.pp-grid').forEach(s=>{
     s.style.display=q?(s.textContent.toLowerCase().includes(q)?'':'none'):'';
   });
 }
@@ -1011,6 +1004,23 @@ function closeTravelers() {
 function closeTravelersOutside(e) {
   if (e.target === document.getElementById('travelersOverlay')) closeTravelers();
 }
+function buildGalapagos() {
+  const body = document.getElementById('galapagosBody');
+  if (body.innerHTML) return;
+  body.innerHTML = '<div class="links-grid">' + GL.map(lk=>`<a class="link-card" href="${lk.u}" target="_blank" rel="noopener"><div class="ico">🐢</div><div class="lbl">${lk.l}</div><svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>`).join('') + '</div>';
+}
+function openGalapagos() {
+  buildGalapagos();
+  document.getElementById('galapagosOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeGalapagos() {
+  document.getElementById('galapagosOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeGalapagosOutside(e) {
+  if (e.target === document.getElementById('galapagosOverlay')) closeGalapagos();
+}
 
 buildDays();
 const tp=document.querySelector('.day-pill.is-today');
@@ -1027,6 +1037,17 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+
+<div class="travelers-overlay" id="galapagosOverlay" onclick="closeGalapagosOutside(event)">
+  <div class="travelers-sheet" id="galapagosSheet">
+    <div class="travelers-handle" onclick="closeGalapagos()"></div>
+    <div class="travelers-header">
+      <h2>🐢 Galápagos Tours & Links</h2>
+      <button class="travelers-close" onclick="closeGalapagos()">✕</button>
+    </div>
+    <div class="travelers-body" id="galapagosBody"></div>
+  </div>
+</div>
 
 <div class="travelers-overlay" id="travelersOverlay" onclick="closeTravelersOutside(event)">
   <div class="travelers-sheet" id="travelersSheet">
