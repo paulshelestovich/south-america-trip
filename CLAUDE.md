@@ -170,17 +170,13 @@ Edit CSS variables in the `<style>` block inside `<head>`. The `--accent` variab
 
 ## Git Workflow
 
-**Merge directly to `main` — do not open pull requests.** This is a personal project with a single owner; PRs add friction with no benefit.
+**Always commit and push directly to `main`.** Do not create branches or pull requests. This is a personal project with a single owner; branches and PRs add friction with no benefit.
 
 ```bash
-git checkout main
-git merge --no-ff <branch>
+git add <files>
+git commit -m "Short imperative message"
 git push origin main
 ```
-
-| Branch | Purpose |
-|--------|---------|
-| `main` | Stable production branch — merge here directly |
 
 Commit history shows iterative UI improvements (theme, offline support, modal UX, search bar). Follow the same concise, imperative commit message style (e.g., `Fix route cities; move passport btn into search bar`).
 
