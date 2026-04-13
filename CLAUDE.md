@@ -168,12 +168,19 @@ Edit CSS variables in the `<style>` block inside `<head>`. The `--accent` variab
 - CSS goes in the `<style>` block in `<head>`. Use existing CSS variables; do not introduce new color literals.
 - JS goes in the inline `<script>` block at the bottom of `<body>`. Keep functions short and focused.
 
-## Git Branches
+## Git Workflow
+
+**Merge directly to `main` — do not open pull requests.** This is a personal project with a single owner; PRs add friction with no benefit.
+
+```bash
+git checkout main
+git merge --no-ff <branch>
+git push origin main
+```
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Stable production branch |
-| `claude/add-claude-documentation-hLRYC` | Documentation branch (this file) |
+| `main` | Stable production branch — merge here directly |
 
 Commit history shows iterative UI improvements (theme, offline support, modal UX, search bar). Follow the same concise, imperative commit message style (e.g., `Fix route cities; move passport btn into search bar`).
 
