@@ -806,12 +806,9 @@ function buildStrip(){
     const sm=idx===0||dt.getDate()===1;
     if(day.r!==lr&&lr) h+=`<div class="strip-div">${RF[day.r]||'·'}</div>`;
     lr=day.r;
-    const types=[...new Set(day.i.map(x=>x.y))];
-    const dots=types.filter(t=>['flight','train','activity','stay'].includes(t)).slice(0,3).map(t=>`<span class="dot ${t}"></span>`).join('');
     h+=`<button class="day-pill${isT?' is-today':''}" data-date="${day.d}" onclick="jump('${day.d}')">
       <span class="dow">${dow}</span><span class="num">${n}</span>
       ${sm?`<span class="mtag">${MN[dt.getMonth()]}</span>`:''}
-      <div class="dots">${dots}</div>
     </button>`;
   });
   s.innerHTML=h;
