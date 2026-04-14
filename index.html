@@ -853,7 +853,7 @@ function updateDocCard(i, status) {
   const badge = document.getElementById(`dbadge-${i}`);
   if (!badge) return;
   if (status === 'cached') {
-    badge.textContent = '✓ available offline'; badge.className = 'doc-badge doc-badge-cached';
+    badge.textContent = '✓'; badge.className = 'doc-badge doc-badge-cached';
   } else if (status === 'saving') {
     badge.textContent = 'saving…'; badge.className = 'doc-badge doc-badge-saving';
   } else {
