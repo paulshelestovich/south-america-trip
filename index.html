@@ -319,21 +319,9 @@
   .link-card .ico { width:32px; height:32px; border-radius:8px; background:var(--bus-bg); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
   .link-card .lbl { font-size:13px; font-weight:500; flex:1; min-width:0; line-height:1.3; }
   .link-card .arw { color:var(--text-muted); flex-shrink:0; }
-  .doc-card { padding:12px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .doc-meta { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
-  .doc-ico { width:32px; height:32px; border-radius:8px; background:var(--bus-bg); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-  .doc-text { min-width:0; }
-  .doc-label { font-size:14px; font-weight:600; color:var(--text); }
-  .doc-badge { font-size:11px; margin-top:2px; display:block; }
+  .doc-badge { font-size:11px; flex-shrink:0; }
   .doc-badge-cached { color:#2a7a40; }
-  .doc-badge-saving { color:var(--accent); }
-  .doc-badge-online { color:var(--text-muted); }
-  .doc-btns { display:flex; gap:6px; flex-shrink:0; align-items:center; }
-  .doc-open { font-size:12px; font-weight:600; padding:6px 10px; border-radius:8px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
-  .doc-save-btn { font-size:12px; font-weight:600; padding:6px 10px; border-radius:8px; background:var(--accent-bg); border:1px solid rgba(191,68,23,0.3); color:var(--accent); cursor:pointer; white-space:nowrap; }
-  .doc-save-btn:disabled { opacity:0.5; cursor:default; }
-  .doc-remove-btn { font-size:12px; font-weight:600; padding:6px 10px; border-radius:8px; background:rgba(42,122,64,0.1); border:1px solid rgba(42,122,64,0.3); color:#2a7a40; cursor:pointer; white-space:nowrap; }
-  .save-all-btn { display:block; width:calc(100% - 28px); margin:0 14px 10px; padding:11px; border-radius:var(--radius-sm); background:var(--accent); border:none; color:white; font-size:14px; font-weight:700; cursor:pointer; }
+  .doc-badge-saving { color:var(--text-muted); }
   .pp-card { padding:13px 14px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; gap:12px; }
   .pp-av { width:36px; height:36px; border-radius:9px; background:var(--bg-surface); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:var(--accent); flex-shrink:0; }
   .pp-info { flex:1; min-width:0; }
@@ -863,59 +851,27 @@ async function refreshDocStatuses() {
 }
 function updateDocCard(i, status) {
   const badge = document.getElementById(`dbadge-${i}`);
-  const btn = document.getElementById(`dbtn-${i}`);
-  if (!badge || !btn) return;
+  if (!badge) return;
   if (status === 'cached') {
-    badge.textContent = '✓ Saved for offline'; badge.className = 'doc-badge doc-badge-cached';
-    btn.textContent = 'Remove'; btn.className = 'doc-remove-btn'; btn.disabled = false;
-    btn.onclick = () => removePdfOffline(i);
+    badge.textContent = '✓ available offline'; badge.className = 'doc-badge doc-badge-cached';
   } else if (status === 'saving') {
-    badge.textContent = 'Saving…'; badge.className = 'doc-badge doc-badge-saving';
-    btn.textContent = '…'; btn.disabled = true;
+    badge.textContent = 'saving…'; badge.className = 'doc-badge doc-badge-saving';
   } else {
-    badge.textContent = 'Online only'; badge.className = 'doc-badge doc-badge-online';
-    btn.textContent = '⬇ Save offline'; btn.className = 'doc-save-btn'; btn.disabled = false;
-    btn.onclick = () => savePdfOffline(i);
+    badge.textContent = ''; badge.className = 'doc-badge';
   }
-}
-async function savePdfOffline(i) {
-  if (!navigator.onLine) { toast('No internet — connect first'); return; }
-  updateDocCard(i, 'saving');
-  const url = docAbsUrl(DOCS[i]);
-  const reg = await navigator.serviceWorker.ready;
-  reg.active.postMessage({ type: 'CACHE_PDF', url });
-}
-async function removePdfOffline(i) {
-  const url = docAbsUrl(DOCS[i]);
-  const reg = await navigator.serviceWorker.ready;
-  reg.active.postMessage({ type: 'REMOVE_PDF', url });
-}
-async function saveAllPdfs() {
-  if (!navigator.onLine) { toast('No internet — connect first'); return; }
-  await Promise.all(DOCS.map(async (d, i) => {
-    const cached = await isPdfCached(docAbsUrl(d));
-    if (!cached) savePdfOffline(i);
-  }));
 }
 function buildDocs() {
   const body = document.getElementById('docsBody');
   if (body.innerHTML) return;
-  const arw = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>`;
-  let h = `<button class="save-all-btn" onclick="saveAllPdfs()">⬇ Save all for offline</button><div class="links-grid">`;
+  const arw = `<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>`;
+  let h = '<div class="links-grid">';
   DOCS.forEach((d, i) => {
-    h += `<div class="doc-card">
-      <div class="doc-meta">
-        <div class="doc-ico">📄</div>
-        <div class="doc-text">
-          <div class="doc-label">${d.l}</div>
-          <span class="doc-badge doc-badge-online" id="dbadge-${i}">checking…</span>
-        </div>
-      </div>
-      <div class="doc-btns">
-        <a class="doc-open" href="${d.f}" target="_blank" rel="noopener">${arw} Open</a>
-        <button class="doc-save-btn" id="dbtn-${i}" onclick="savePdfOffline(${i})">⬇ Save offline</button>
-      </div>
-    </div>`;
+    h += `<a class="link-card" href="${d.f}" target="_blank" rel="noopener">
+      <div class="ico">📄</div>
+      <div class="lbl">${d.l}</div>
+      <span class="doc-badge" id="dbadge-${i}"></span>
+      ${arw}
+    </a>`;
   });
   h += '</div>';
   body.innerHTML = h;
