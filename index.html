@@ -859,7 +859,14 @@ if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'neare
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/south-america-trip/sw.js', { scope: '/south-america-trip/' })
-      .then(r => console.log('SW registered'))
+      .then(r => {
+        // After SW is ready, warm the PDF cache in the background while online
+        if (navigator.onLine) {
+          navigator.serviceWorker.ready.then(() => {
+            DOCS.forEach(d => fetch(d.f).catch(() => {}));
+          });
+        }
+      })
       .catch(e => console.warn('SW failed:', e));
   });
 }

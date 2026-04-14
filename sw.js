@@ -1,24 +1,9 @@
-const CACHE = 'sa-trip-v3';
+const CACHE = 'sa-trip-v4';
 const CORE = ['/', '/index.html'];
-const DOCS = [
-  '/south-america-trip/docs/Cusco%20Airbnb%20.pdf',
-  '/south-america-trip/docs/Lima%20Airbnb%20Receipt.pdf',
-  '/south-america-trip/docs/Pudahuel%20Airbnb%20.pdf',
-  '/south-america-trip/docs/San%20Crist%C3%B3bal%20Airbnb%20.pdf',
-  '/south-america-trip/docs/Santa%20Cruz%20Airbnb.pdf',
-  '/south-america-trip/docs/Santiago%20Airbnb%201.pdf',
-];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(async c => {
-      // Core assets must succeed
-      await c.addAll(CORE);
-      // PDFs cached individually — a single failure won't break install
-      await Promise.allSettled(
-        DOCS.map(url => fetch(url).then(res => { if (res.ok) c.put(url, res); }))
-      );
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())
   );
 });
 
@@ -41,7 +26,6 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => {
-        // Only fall back to index.html for navigation requests, not assets/PDFs
         if (e.request.mode === 'navigate') return caches.match('/index.html');
       });
     })
