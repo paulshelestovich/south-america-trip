@@ -1,5 +1,13 @@
-const CACHE = 'sa-trip-v1';
-const ASSETS = ['/', '/index.html'];
+const CACHE = 'sa-trip-v2';
+const ASSETS = [
+  '/', '/index.html',
+  '/south-america-trip/docs/Cusco%20Airbnb%20.pdf',
+  '/south-america-trip/docs/Lima%20Airbnb%20Receipt.pdf',
+  '/south-america-trip/docs/Pudahuel%20Airbnb%20.pdf',
+  '/south-america-trip/docs/San%20Crist%C3%B3bal%20Airbnb%20.pdf',
+  '/south-america-trip/docs/Santa%20Cruz%20Airbnb.pdf',
+  '/south-america-trip/docs/Santiago%20Airbnb%201.pdf',
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(

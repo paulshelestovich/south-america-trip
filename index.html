@@ -477,6 +477,7 @@
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="searchInput" type="text" placeholder="Search flights, hotels, codes…" autocomplete="off">
     <button class="passport-btn" onclick="openGalapagos()" title="Galápagos Tours & Links">🐢</button>
+    <button class="passport-btn" onclick="openDocs()" title="Documents">📄</button>
     <button class="passport-btn" onclick="openTravelers()" title="Travelers & Passport details">🛂</button>
   </div>
   <div class="day-strip" id="dayStrip"></div>
@@ -576,6 +577,15 @@ const GL=[
 {l:"Aqua Ventures — Tour 360",u:"https://aquaventuresgps.com/producto/tour-360/"},
 {l:"Islanders Galápagos Tours",u:"https://www.facebook.com/IslandersGalapagosTours"},
 {l:"Galápagos Xcursion — Tour 360",u:"https://galapagosxcursion.com/product/360/"}
+];
+
+const DOCS=[
+{l:"Cusco Airbnb",f:"docs/Cusco%20Airbnb%20.pdf"},
+{l:"Lima Airbnb Receipt",f:"docs/Lima%20Airbnb%20Receipt.pdf"},
+{l:"Pudahuel Airbnb",f:"docs/Pudahuel%20Airbnb%20.pdf"},
+{l:"San Cristóbal Airbnb",f:"docs/San%20Crist%C3%B3bal%20Airbnb%20.pdf"},
+{l:"Santa Cruz Airbnb",f:"docs/Santa%20Cruz%20Airbnb.pdf"},
+{l:"Santiago Airbnb 1",f:"docs/Santiago%20Airbnb%201.pdf"},
 ];
 
 const PP=[
@@ -822,6 +832,24 @@ function closeGalapagosOutside(e) {
   if (e.target === document.getElementById('galapagosOverlay')) closeGalapagos();
 }
 
+function buildDocs() {
+  const body = document.getElementById('docsBody');
+  if (body.innerHTML) return;
+  body.innerHTML = '<div class="links-grid">' + DOCS.map(d=>`<a class="link-card" href="${d.f}" target="_blank" rel="noopener"><div class="ico">📄</div><div class="lbl">${d.l}</div><svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>`).join('') + '</div>';
+}
+function openDocs() {
+  buildDocs();
+  document.getElementById('docsOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDocs() {
+  document.getElementById('docsOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeDocsOutside(e) {
+  if (e.target === document.getElementById('docsOverlay')) closeDocs();
+}
+
 buildDays();
 const tp=document.querySelector('.day-pill.is-today');
 if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'nearest',inline:'center'}),100);}
@@ -837,6 +865,17 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+
+<div class="travelers-overlay" id="docsOverlay" onclick="closeDocsOutside(event)">
+  <div class="travelers-sheet" id="docsSheet">
+    <div class="travelers-handle" onclick="closeDocs()"></div>
+    <div class="travelers-header">
+      <h2>📄 Documents</h2>
+      <button class="travelers-close" onclick="closeDocs()">✕</button>
+    </div>
+    <div class="travelers-body" id="docsBody"></div>
+  </div>
+</div>
 
 <div class="travelers-overlay" id="galapagosOverlay" onclick="closeGalapagosOutside(event)">
   <div class="travelers-sheet" id="galapagosSheet">
