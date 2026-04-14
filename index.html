@@ -941,15 +941,24 @@ if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'neare
 
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/south-america-trip/sw.js', { scope: '/south-america-trip/' })
-      .catch(e => console.warn('SW failed:', e));
+  window.addEventListener('load', async () => {
+    try {
+      await navigator.serviceWorker.register('/south-america-trip/sw.js', { scope: '/south-america-trip/' });
+    } catch(e) { console.warn('SW failed:', e); }
+    if (navigator.onLine) {
+      const reg = await navigator.serviceWorker.ready;
+      for (const d of DOCS) {
+        const url = docAbsUrl(d);
+        const cached = await isPdfCached(url);
+        if (!cached) reg.active?.postMessage({ type: 'CACHE_PDF', url, auto: true });
+      }
+    }
   });
   navigator.serviceWorker.addEventListener('message', e => {
     const i = DOCS.findIndex(d => docAbsUrl(d) === e.data?.url);
-    if (e.data?.type === 'PDF_CACHED' && i >= 0) { updateDocCard(i, 'cached'); toast('Saved for offline ✓'); }
+    if (e.data?.type === 'PDF_CACHED' && i >= 0) { updateDocCard(i, 'cached'); if (!e.data.auto) toast('Saved for offline ✓'); }
     if (e.data?.type === 'PDF_REMOVED' && i >= 0) { updateDocCard(i, 'online'); toast('Removed offline copy'); }
-    if (e.data?.type === 'PDF_CACHE_ERROR' && i >= 0) { updateDocCard(i, 'online'); toast('Save failed — check connection'); }
+    if (e.data?.type === 'PDF_CACHE_ERROR' && i >= 0) { updateDocCard(i, 'online'); if (!e.data.auto) toast('Save failed — check connection'); }
   });
 }
 </script>

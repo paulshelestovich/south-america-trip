@@ -25,13 +25,13 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('message', e => {
   if (e.data?.type === 'CACHE_PDF') {
-    const { url } = e.data;
+    const { url, auto } = e.data;
     const src = e.source;
     e.waitUntil(
       caches.open(PDF_CACHE)
         .then(c => c.add(url))
-        .then(() => src?.postMessage({ type: 'PDF_CACHED', url }))
-        .catch(err => src?.postMessage({ type: 'PDF_CACHE_ERROR', url, error: String(err) }))
+        .then(() => src?.postMessage({ type: 'PDF_CACHED', url, auto }))
+        .catch(err => src?.postMessage({ type: 'PDF_CACHE_ERROR', url, auto, error: String(err) }))
     );
   }
   if (e.data?.type === 'REMOVE_PDF') {
