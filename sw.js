@@ -4,7 +4,7 @@ const PDF_CACHE = 'sa-trip-pdf-v1';
 const APP_SHELL = [
   '/south-america-trip/',
   '/south-america-trip/index.html',
-  '/south-america-trip/offline.html',
+
 ];
 
 self.addEventListener('install', e => {
@@ -76,7 +76,7 @@ self.addEventListener('fetch', e => {
           return res;
         })
         .catch(() =>
-          caches.match(request).then(cached => cached || caches.match('/south-america-trip/offline.html'))
+          caches.match(request)
         )
     );
     return;
