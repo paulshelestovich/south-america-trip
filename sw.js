@@ -1,4 +1,4 @@
-const APP_CACHE = 'sa-trip-app-v1';
+const APP_CACHE = 'sa-trip-app-v2';
 const PDF_CACHE = 'sa-trip-pdf-v1';
 
 const APP_SHELL = [
@@ -7,9 +7,16 @@ const APP_SHELL = [
 
 ];
 
+const PDF_PRELOAD = [
+  '/south-america-trip/docs/WEB2651809.pdf',
+  '/south-america-trip/docs/WEB2743574.pdf',
+];
+
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(APP_CACHE).then(c => c.addAll(APP_SHELL)).then(() => self.skipWaiting())
+    caches.open(APP_CACHE).then(c => c.addAll(APP_SHELL))
+      .then(() => caches.open(PDF_CACHE).then(c => c.addAll(PDF_PRELOAD).catch(() => {})))
+      .then(() => self.skipWaiting())
   );
 });
 
