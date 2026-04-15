@@ -10,6 +10,8 @@ const APP_SHELL = [
 const PDF_PRELOAD = [
   '/south-america-trip/docs/WEB2651809.pdf',
   '/south-america-trip/docs/WEB2743574.pdf',
+  '/south-america-trip/docs/Boletos_2444279.pdf',
+  '/south-america-trip/docs/Boletos_2444567.pdf',
 ];
 
 self.addEventListener('install', e => {
