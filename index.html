@@ -668,8 +668,10 @@ function ri(items){
       tc=`<div style="font-size:20px;line-height:1">${it.ic}</div>`;
     } else if(it.wi){
       tc=`<div style="font-size:16px;line-height:1">${it.wi}</div>`;
+    } else if(it.ic){
+      tc=`<div style="font-size:16px;line-height:1">${it.ic}</div>`;
     } else {
-      tc=`<div class="t-dot"></div>`;
+      tc='';
     }
     let a='';
     if(it.rf){
@@ -687,7 +689,6 @@ function ri(items){
     return `<div class="item" data-type="${it.y}">
       <div class="item-tcol">${tc}</div>
       <div class="item-right">
-        ${it.y!=='stay' && it.ic?`<div class="item-icon ${it.y}">${it.ic}</div>`:''}
         <div class="item-body">
           <div class="item-label">${it.l}</div>
           ${it.dt?`<div class="item-detail" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">${it.dt}${it.y==='stay'?`<button class="cp-btn" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`:''}
