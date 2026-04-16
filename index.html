@@ -690,7 +690,7 @@ function ri(items){
       <div class="item-right">
         <div class="item-body">
           <div class="item-label">${it.l}</div>
-          ${it.dt?`<div class="item-detail" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">${it.dt}${it.y==='stay'?`<button class="cp-btn" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`:''}
+          ${it.dt?`<div class="item-detail">${it.dt}${it.y==='stay'?`<button class="cp-btn" style="display:inline-flex;vertical-align:middle;margin-left:4px" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`:''}
           ${a?`<div class="item-actions">${a}</div>`:''}
         </div>
       </div>
