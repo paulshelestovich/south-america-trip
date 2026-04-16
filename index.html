@@ -246,6 +246,7 @@
   .mbadge { display:inline-flex; align-items:center; font-size:10px; font-weight:600; padding:1px 6px; border-radius:4px; letter-spacing:0.3px; }
   .mbadge.flight { background:var(--flight-bg); color:var(--flight); }
   .mbadge.train { background:var(--train-bg); color:var(--train); }
+  .mbadge.bus { background:var(--bus-bg); color:var(--text-dim); }
   .today-tag { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); background:var(--accent-bg); padding:2px 8px; border-radius:4px; }
   .chevron { transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); color:var(--text-muted); flex-shrink:0; }
   .day-card.open .chevron { transform:rotate(180deg); }
@@ -496,8 +497,8 @@ const D=[
 {y:"stay",ic:"🏠",l:"Airbnb in Santiago",dt:"General Mackenna 1555 801, Santiago",lk:[{l:"Airbnb",u:"https://www.airbnb.co.nz/rooms/1131314522435846552"},{l:"Map",u:"https://maps.app.goo.gl/zvZbeAdHASG371yy5"},{l:"PDF",u:"docs/Santiago%20Airbnb%201.pdf"}]}
 ]},
 {d:"2026-04-25",r:"cl",t:"Valparaíso Day Trip",i:[
-{y:"note",ic:"🚇",l:"Metro Line 1 to Terminal Pajaritos",lk:[{l:"Map",u:"https://maps.app.goo.gl/t4PQqxwX26qfvgNU8"}]},
-{y:"note",ic:"🚌",l:"Bus to Valparaíso",lk:[{l:"Turbus",u:"https://www.turbus.cl/"},{l:"Pullman",u:"https://www.pullmanbus.cl/en"},{l:"Condor",u:"https://www.condorbus.cl/"},{l:"Flixbus",u:"https://www.flixbus.cl/"}]},
+{y:"note",ic:"🚇",wi:"🚇",l:"Metro Line 1 to Terminal Pajaritos",lk:[{l:"Map",u:"https://maps.app.goo.gl/t4PQqxwX26qfvgNU8"}]},
+{y:"note",ic:"🚌",wi:"🚌",bb:true,l:"Bus to Valparaíso",lk:[{l:"Turbus",u:"https://www.turbus.cl/"},{l:"Pullman",u:"https://www.pullmanbus.cl/en"},{l:"Condor",u:"https://www.condorbus.cl/"},{l:"Flixbus",u:"https://www.flixbus.cl/"}]},
 {y:"activity",ic:"⚽",l:"Soccer"},
 {y:"stay",ic:"🏠",l:"Airbnb in Santiago",dt:"General Mackenna 1555 801, Santiago",lk:[{l:"Airbnb",u:"https://www.airbnb.co.nz/rooms/1131314522435846552"},{l:"Map",u:"https://maps.app.goo.gl/zvZbeAdHASG371yy5"},{l:"PDF",u:"docs/Santiago%20Airbnb%201.pdf"}]}
 ]},
@@ -630,10 +631,11 @@ function buildDays(){
     const dt=new Date(day.d+'T00:00:00');
     const dow=DW[dt.getDay()],n=dt.getDate(),mo=MN[dt.getMonth()];
     const isT=day.d===ts;
-    const hf=day.i.some(x=>x.y==='flight'), ht=day.i.some(x=>x.y==='train');
+    const hf=day.i.some(x=>x.y==='flight'), ht=day.i.some(x=>x.y==='train'), hb=day.i.some(x=>x.bb);
     const badges=[];
     if(hf) badges.push('<span class="mbadge flight">✈️ Flight</span>');
     if(ht) badges.push('<span class="mbadge train">🚂 Train</span>');
+    if(hb) badges.push('<span class="mbadge bus">🚌 Bus</span>');
     h+=`<div class="day-card${isT?' today-card open':''}" data-date="${day.d}" id="day-${day.d}">
       <div class="day-header" onclick="tog(this)">
         <div class="day-header-left">
