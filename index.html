@@ -497,8 +497,8 @@ const D=[
 {y:"stay",ic:"🏠",l:"Airbnb in Santiago",dt:"General Mackenna 1555 801, Santiago",lk:[{l:"Airbnb",u:"https://www.airbnb.co.nz/rooms/1131314522435846552"},{l:"Map",u:"https://maps.app.goo.gl/zvZbeAdHASG371yy5"},{l:"PDF",u:"docs/Santiago%20Airbnb%201.pdf"}]}
 ]},
 {d:"2026-04-25",r:"cl",t:"Valparaíso Day Trip",i:[
-{y:"note",ic:"🚇",wi:"🚇",l:"Metro Line 1 to Terminal Pajaritos",lk:[{l:"Map",u:"https://maps.app.goo.gl/t4PQqxwX26qfvgNU8"}]},
-{y:"note",ic:"🚌",wi:"🚌",bb:true,l:"Bus to Valparaíso",lk:[{l:"Turbus",u:"https://www.turbus.cl/"},{l:"Pullman",u:"https://www.pullmanbus.cl/en"},{l:"Condor",u:"https://www.condorbus.cl/"},{l:"Flixbus",u:"https://www.flixbus.cl/"}]},
+{y:"note",wi:"🚇",l:"Metro Line 1 to Terminal Pajaritos",lk:[{l:"Map",u:"https://maps.app.goo.gl/t4PQqxwX26qfvgNU8"}]},
+{y:"note",wi:"🚌",bb:true,l:"Bus to Valparaíso",lk:[{l:"Turbus",u:"https://www.turbus.cl/"},{l:"Pullman",u:"https://www.pullmanbus.cl/en"},{l:"Condor",u:"https://www.condorbus.cl/"},{l:"Flixbus",u:"https://www.flixbus.cl/"}]},
 {y:"activity",ic:"⚽",l:"Soccer"},
 {y:"stay",ic:"🏠",l:"Airbnb in Santiago",dt:"General Mackenna 1555 801, Santiago",lk:[{l:"Airbnb",u:"https://www.airbnb.co.nz/rooms/1131314522435846552"},{l:"Map",u:"https://maps.app.goo.gl/zvZbeAdHASG371yy5"},{l:"PDF",u:"docs/Santiago%20Airbnb%201.pdf"}]}
 ]},
@@ -689,7 +689,7 @@ function ri(items){
     return `<div class="item" data-type="${it.y}">
       <div class="item-tcol">${tc}</div>
       <div class="item-right">
-        ${it.y!=='stay'?`<div class="item-icon ${it.y}">${it.ic}</div>`:''}
+        ${it.y!=='stay' && it.ic?`<div class="item-icon ${it.y}">${it.ic}</div>`:''}
         <div class="item-body">
           <div class="item-label">${it.l}</div>
           ${it.dt?`<div class="item-detail" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">${it.dt}${it.y==='stay'?`<button class="cp-btn" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`:''}
