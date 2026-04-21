@@ -78,15 +78,13 @@ self.addEventListener('fetch', e => {
 
   if (request.mode === 'navigate') {
     e.respondWith(
-      fetch(request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(APP_CACHE).then(c => c.put(request, clone));
+      caches.match(request).then(cached => {
+        const netFetch = fetch(request).then(res => {
+          if (res.ok) caches.open(APP_CACHE).then(c => c.put(request, res.clone()));
           return res;
-        })
-        .catch(() =>
-          caches.match(request)
-        )
+        });
+        return cached ? (netFetch.catch(() => {}), cached) : netFetch;
+      })
     );
     return;
   }
@@ -100,7 +98,7 @@ self.addEventListener('fetch', e => {
           caches.open(APP_CACHE).then(c => c.put(request, clone));
         }
         return res;
-      }).catch(() => undefined);
+      }).catch(() => new Response('', {status:503}));
     })
   );
 });

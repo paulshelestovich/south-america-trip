@@ -283,8 +283,12 @@
   .item-icon.note { background:var(--note-bg); }
   .item-body { flex:1; min-width:0; }
   .item-label { font-size:14px; font-weight:600; color:var(--text); line-height:1.3; }
-  .item-detail { font-size:12.5px; color:var(--text-dim); margin-top:3px; line-height:1.4; word-break:break-word; }
+  .item-detail { font-size:12.5px; color:var(--text-dim); margin-top:3px; line-height:1.4; word-break:break-word; display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
   .item-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .tc-icon { font-size:16px; line-height:1; }
+  .tc-icon-lg { font-size:20px; line-height:1; }
+  .pp-detail { font-size:14px; color:var(--text-muted); margin-top:3px; display:flex; align-items:center; gap:4px; }
+  .pp-dob { font-size:14px; color:var(--text-muted); margin-top:2px; }
   .action-btn {
     display:inline-flex; align-items:center; gap:5px;
     font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600;
@@ -654,6 +658,9 @@ function buildDays(){
   if(!document.querySelector('.day-card.today-card')){const f=document.querySelector('.day-card');if(f)f.classList.add('open');}
 }
 
+const cpSvg='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const lkSvg='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>';
+
 function ri(items){
   return items.map(it=>{
     let tc;
@@ -664,33 +671,29 @@ function ri(items){
         tc+=`<div class="t-arr">▸ ${e}</div>`;
       }
     } else if(it.y==='stay'){
-      tc=`<div style="font-size:20px;line-height:1">${it.ic}</div>`;
+      tc=`<div class="tc-icon-lg">${it.ic}</div>`;
     } else if(it.wi){
-      tc=`<div style="font-size:16px;line-height:1">${it.wi}</div>`;
+      tc=`<div class="tc-icon">${it.wi}</div>`;
     } else if(it.ic){
-      tc=`<div style="font-size:16px;line-height:1">${it.ic}</div>`;
+      tc=`<div class="tc-icon">${it.ic}</div>`;
     } else {
       tc='';
     }
     let a='';
     if(it.rf){
       it.rf.split(' / ').forEach(code=>{
-        a+=`<button class="action-btn" onclick="cp('${code}',this)">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        ${code}</button>`;
+        a+=`<button class="action-btn" onclick="cp('${code}',this)">${cpSvg}${code}</button>`;
       });
     }
     if(it.lk) it.lk.forEach(lk=>{
-      a+=`<a class="action-btn" href="${lk.u}" target="_blank" rel="noopener">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-        ${lk.l}</a>`;
+      a+=`<a class="action-btn" href="${lk.u}" target="_blank" rel="noopener noreferrer">${lkSvg}${lk.l}</a>`;
     });
     return `<div class="item" data-type="${it.y}">
       <div class="item-tcol">${tc}</div>
       <div class="item-right">
         <div class="item-body">
           <div class="item-label">${it.l}</div>
-          ${it.dt?`<div class="item-detail">${it.dt}${it.y==='stay'?`<button class="cp-btn" style="display:inline-flex;vertical-align:middle;margin-left:4px" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`:''}
+          ${it.dt?`<div class="item-detail">${it.dt}${it.y==='stay'?`<button class="cp-btn" onclick="cp(\`${it.dt.replace(/`/g,"'")}\`,this)" title="Copy address">${cpSvg}</button>`:''}</div>`:''}
           ${a?`<div class="item-actions">${a}</div>`:''}
         </div>
       </div>
@@ -701,15 +704,14 @@ function ri(items){
 function tog(h){h.closest('.day-card').classList.toggle('open');}
 
 function jump(ds){
-  document.querySelectorAll('.day-pill').forEach(p=>p.classList.remove('active'));
+  dayPills.forEach(p=>p.classList.remove('active'));
   const pill=document.querySelector(`.day-pill[data-date="${ds}"]`);
   if(pill){pill.classList.add('active');pill.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
   const card=document.getElementById('day-'+ds);
   if(card){
     card.classList.add('open');
     setTimeout(()=>{
-      const bh=document.querySelector('.sticky-bar')?.offsetHeight||0;
-      const top=card.getBoundingClientRect().top+window.scrollY-bh-8;
+      const top=card.getBoundingClientRect().top+window.scrollY-stickyH-8;
       window.scrollTo({top,behavior:'smooth'});
     },50);
   }
@@ -741,23 +743,25 @@ si.addEventListener('input',()=>{clearTimeout(st);st=setTimeout(doSearch,150);})
 
 function doSearch(){
   const q=si.value.toLowerCase().trim();
-  document.querySelectorAll('.day-card').forEach(c=>{
+  dayCards.forEach(c=>{
     const m=!q||c.textContent.toLowerCase().includes(q);
     c.classList.toggle('hidden',!m);
     if(q&&m)c.classList.add('open');
   });
-
 }
 
 function updatePill(){
-  const bh=document.querySelector('.sticky-bar')?.offsetHeight||0;
   let act=null;
-  document.querySelectorAll('.day-card:not(.hidden)').forEach(c=>{
-    if(c.getBoundingClientRect().top<bh+100)act=c.dataset.date;
+  dayCards.forEach(c=>{
+    if(!c.classList.contains('hidden')&&c.getBoundingClientRect().top<stickyH+100)act=c.dataset.date;
   });
   if(act){
-    document.querySelectorAll('.day-pill').forEach(p=>p.classList.toggle('active',p.dataset.date===act));
-    const ap=document.querySelector('.day-pill.active');
+    let ap=null;
+    dayPills.forEach(p=>{
+      const isAct=p.dataset.date===act;
+      p.classList.toggle('active',isAct);
+      if(isAct)ap=p;
+    });
     if(ap)ap.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
 }
@@ -769,6 +773,9 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 
 buildStrip();
+let dayPills=document.querySelectorAll('.day-pill');
+let stickyH=document.querySelector('.sticky-bar')?.offsetHeight||0;
+window.addEventListener('resize',()=>{stickyH=document.querySelector('.sticky-bar')?.offsetHeight||0;},{passive:true});
 
 function toggleHeroDetails() {
   const d = document.getElementById('hero-details');
@@ -786,17 +793,13 @@ function buildTravelers() {
     h += `<div class="pp-card">
       <div class="pp-info">
         <div class="pp-name">${t.f} ${t.la}
-          <button class="cp-btn" onclick="cp('${t.f} ${t.la}',this)" title="Copy name">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
+          <button class="cp-btn" onclick="cp('${t.f} ${t.la}',this)" title="Copy name">${cpSvg}</button>
         </div>
         <div class="pp-num">${t.p}
-          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
+          <button class="cp-btn" onclick="cp('${t.p}',this)" title="Copy">${cpSvg}</button>
         </div>
-        <div style="font-size:14px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:4px">${t.x}${t.x.includes('@')?`<button class="cp-btn" onclick="cp('${t.x}',this)" title="Copy email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>
-        ${t.dob?`<div style="font-size:14px;color:var(--text-muted);margin-top:2px">DOB: ${t.dob}</div>`:''}
+        <div class="pp-detail">${t.x}${t.x.includes('@')?`<button class="cp-btn" onclick="cp('${t.x}',this)" title="Copy email">${cpSvg}</button>`:''}</div>
+        ${t.dob?`<div class="pp-dob">DOB: ${t.dob}</div>`:''}
       </div>
     </div>`;
   });
@@ -887,6 +890,7 @@ function closeDocsOutside(e) {
 }
 
 buildDays();
+let dayCards=document.querySelectorAll('.day-card');
 const tp=document.querySelector('.day-pill.is-today');
 if(tp){tp.classList.add('active');setTimeout(()=>tp.scrollIntoView({block:'nearest',inline:'center'}),100);}
 </script>
