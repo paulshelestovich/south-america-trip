@@ -594,11 +594,11 @@ const DOCS=[
 ];
 
 const PP=[
-{f:"Pavel",la:"Sheliastovich",p:"LB098173",x:"sagittarius.pod@gmail.com",dob:"06.12.1988"},
-{f:"Yevhenii",la:"Kolisnyk",p:"EP917318",x:"DOB: 03.02.1993"},
-{f:"Tetiana",la:"Baiba",p:"GJ667814",x:"DOB: 06.05.1995"},
-{f:"Valentin",la:"Popov",p:"709625",x:"DOB: 18.12.1987"},
-{f:"Darya",la:"Mikhalionak",p:"LB013044",x:"DOB: 31.03.1990"}
+{f:"Pavel",la:"Sheliastovich",p:"LB098173",x:"sagittarius.pod@gmail.com",dob:"06.12.1988",exp:"02.10.2030"},
+{f:"Yevhenii",la:"Kolisnyk",p:"EP917318",x:"DOB: 03.02.1993",exp:"05.04.2023"},
+{f:"Tetiana",la:"Baiba",p:"GJ667814",x:"DOB: 06.05.1995",exp:"05.06.2034"},
+{f:"Valentin",la:"Popov",p:"709625",x:"DOB: 18.12.1987",exp:"01.03.2032"},
+{f:"Darya",la:"Mikhalionak",p:"LB013044",x:"DOB: 31.03.1990",exp:"07.10.2030"}
 ];
 
 const DW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -801,6 +801,7 @@ function buildTravelers() {
         </div>
         <div class="pp-detail">${t.x}${t.x.includes('@')?`<button class="cp-btn" onclick="cp('${t.x}',this)" title="Copy email">${cpSvg}</button>`:''}</div>
         ${t.dob?`<div class="pp-dob">DOB: ${t.dob}</div>`:''}
+        ${t.exp?`<div class="pp-dob">Exp: ${t.exp}</div>`:''}
       </div>
     </div>`;
   });
