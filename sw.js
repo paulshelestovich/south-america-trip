@@ -12,6 +12,11 @@ const PDF_PRELOAD = [
   '/south-america-trip/docs/WEB2743574.pdf',
   '/south-america-trip/docs/Boletos_2444279.pdf',
   '/south-america-trip/docs/Boletos_2444567.pdf',
+  '/south-america-trip/docs/boarding-SCL-LIM-Pavel.pdf',
+  '/south-america-trip/docs/boarding-SCL-LIM-Darya.pdf',
+  '/south-america-trip/docs/boarding-SCL-LIM-Yevhenii.pdf',
+  '/south-america-trip/docs/boarding-SCL-LIM-Tetiana.pdf',
+  '/south-america-trip/docs/boarding-SCL-LIM-Valentin.pdf',
 ];
 
 self.addEventListener('install', e => {
