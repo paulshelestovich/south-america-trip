@@ -17,6 +17,11 @@ const PDF_PRELOAD = [
   '/south-america-trip/docs/boarding-SCL-LIM-Yevhenii.pdf',
   '/south-america-trip/docs/boarding-SCL-LIM-Tetiana.pdf',
   '/south-america-trip/docs/boarding-SCL-LIM-Valentin.pdf',
+  '/south-america-trip/docs/boarding-LIM-CUZ-Pavel.pdf',
+  '/south-america-trip/docs/boarding-LIM-CUZ-Darya.pdf',
+  '/south-america-trip/docs/boarding-LIM-CUZ-Yevhenii.pdf',
+  '/south-america-trip/docs/boarding-LIM-CUZ-Tetiana.pdf',
+  '/south-america-trip/docs/boarding-LIM-CUZ-Valentin.pdf',
 ];
 
 self.addEventListener('install', e => {
