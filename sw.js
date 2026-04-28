@@ -22,6 +22,7 @@ const PDF_PRELOAD = [
   '/south-america-trip/docs/boarding-LIM-CUZ-Yevhenii.pdf',
   '/south-america-trip/docs/boarding-LIM-CUZ-Tetiana.pdf',
   '/south-america-trip/docs/boarding-LIM-CUZ-Valentin.pdf',
+  '/south-america-trip/docs/Consettur-Bus-Tickets.pdf',
 ];
 
 self.addEventListener('install', e => {
