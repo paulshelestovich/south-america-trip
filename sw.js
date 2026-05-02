@@ -23,6 +23,8 @@ const PDF_PRELOAD = [
   '/south-america-trip/docs/boarding-LIM-CUZ-Tetiana.pdf',
   '/south-america-trip/docs/boarding-LIM-CUZ-Valentin.pdf',
   '/south-america-trip/docs/Consettur-Bus-Tickets.pdf',
+  '/south-america-trip/docs/boarding-LIM-GYE-Pavel.pdf',
+  '/south-america-trip/docs/boarding-LIM-GYE-Darya.pdf',
 ];
 
 self.addEventListener('install', e => {
