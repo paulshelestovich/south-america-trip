@@ -29,6 +29,8 @@ const PDF_PRELOAD = [
   '/south-america-trip/docs/boarding-LIM-GYE-Darya-LA1449.pdf',
   '/south-america-trip/docs/boarding-GYE-SCY-Pavel.pdf',
   '/south-america-trip/docs/boarding-GYE-SCY-Darya.pdf',
+  '/south-america-trip/docs/transit-card-GYE-Pavel.pdf',
+  '/south-america-trip/docs/transit-card-GYE-Darya.pdf',
 ];
 
 self.addEventListener('install', e => {
